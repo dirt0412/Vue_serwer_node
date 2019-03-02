@@ -1,0 +1,33 @@
+{
+  "name": "angular6-crud-test-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mssql": "^ 3.3.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dirt0412/angular6-CRUD-test-Server.git"
+  },
+  "keywords": [
+    "node.js",
+    "mssql",
+    "angular",
+    "6"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dirt0412/angular6-CRUD-test-Server/issues"
+  },
+  "homepage": "https://github.com/dirt0412/angular6-CRUD-test-Server#readme"
+}
