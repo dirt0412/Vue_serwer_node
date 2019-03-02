@@ -28,7 +28,7 @@ var server = app.listen(process.env.PORT || 3000, function () {
 //Initiallising connection string
 var dbConfig = {
     user: "sa",
-    password: "ultravga1280",
+    password: "password",
     server: "localhost",
     database: "baza4"
 };
