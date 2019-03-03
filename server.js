@@ -63,6 +63,28 @@ app.get("/api/product", function (req, res) {
     executeQuery(res, query);
 });
 
+//POST API Pagination
+app.post("/api/products", function (req, res) {
+    (async function () {
+        try {
+            let pool = await sql.connect(dbConfig)
+            let result = await pool.request()
+                .query("SELECT id, name, description, price FROM [Table_products] ORDER BY id OFFSET ((" + req.body.currentPage + " - 1) * " + req.body.perPage + ") ROWS FETCH NEXT " + req.body.perPage + " ROWS ONLY;")
+
+            res.send(result);
+        } catch (err) {
+            console.log("Error : " + err);
+            res.send(err);
+        }
+    })()
+
+    sql.on('error', err => {
+        // ... error handler
+    })
+
+});
+
+
 //GET API by id
 app.get("/api/product/:id", function (req, res) {
     var query = "SELECT id, name, description, price FROM [Table_products] WHERE id = " + req.params.id + ";";
