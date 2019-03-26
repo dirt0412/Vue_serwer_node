@@ -59,7 +59,7 @@ var executeQuery = function (res, query) {
 
 //GET API
 app.get("/api/product", function (req, res) {
-    var query = "SELECT id, name, description, price FROM [Table_products];";
+    var query = `SELECT id, name, description, price FROM [Table_products];`;
     executeQuery(res, query);
 });
 
@@ -69,7 +69,7 @@ app.post("/api/products", function (req, res) {
         try {
             let pool = await sql.connect(dbConfig)
             let result = await pool.request()
-                .query("SELECT id, name, description, price FROM [Table_products] ORDER BY id OFFSET ((" + req.body.currentPage + " - 1) * " + req.body.perPage + ") ROWS FETCH NEXT " + req.body.perPage + " ROWS ONLY;")
+                .query(`SELECT id, name, description, price FROM [Table_products] ORDER BY id OFFSET ((${req.body.currentPage}- 1) * ${req.body.perPage}) ROWS FETCH NEXT ${req.body.perPage} ROWS ONLY;`)
 
             res.send(result);
         } catch (err) {
@@ -87,7 +87,7 @@ app.post("/api/products", function (req, res) {
 
 //GET API by id
 app.get("/api/product/:id", function (req, res) {
-    var query = "SELECT id, name, description, price FROM [Table_products] WHERE id = " + req.params.id + ";";
+    var query = `SELECT id, name, description, price FROM [Table_products] WHERE id = ${req.params.id};`;
     executeQuery(res, query);
 });
 
@@ -97,9 +97,7 @@ app.post("/api/product", function (req, res) {
         try {
             let pool = await sql.connect(dbConfig)
             let result = await pool.request()
-                .input('name', sql.NVarChar, req.body.product.name)
-                .input('description', sql.NVarChar, req.body.product.description)
-                .query("INSERT INTO [Table_products] (name, description, price) VALUES ( @name,@description," + req.body.product.price + ");")
+                .query(`INSERT INTO [Table_products] (name, description, price) VALUES ( '${req.body.product.name}','${req.body.product.description}',${req.body.product.price});`)
 
             res.send(result);
 
@@ -127,9 +125,7 @@ app.put("/api/product/:id", function (req, res) {
         try {
             let pool = await sql.connect(dbConfig)
             let result = await pool.request()
-                .input('name', sql.NVarChar, req.body.product.name)
-                .input('description', sql.NVarChar, req.body.product.description)
-                .query("UPDATE [Table_products] SET name=@name , description=@description , price=" + req.body.product.price + "  WHERE id= " + req.params.id + ";")
+                .query(`UPDATE [Table_products] SET name='${req.body.product.name}' , description='${req.body.product.description}' , price=${req.body.product.price}  WHERE id=${req.params.id};`)
 
             res.send(result);
         } catch (err) {
@@ -145,13 +141,13 @@ app.put("/api/product/:id", function (req, res) {
 
 // DELETE API
 app.delete("/api/product/:id", function (req, res) {
-    var query = "DELETE FROM [Table_products] WHERE id=" + req.params.id + ";";
+    var query = `DELETE FROM [Table_products] WHERE id=${req.params.id};`;
     executeQuery(res, query);
 });
 
 //GET API by mail
 app.get("/api/users/:mail", function (req, res) {
-    var query = "SELECT mail, password FROM [Table_users] WHERE mail = '" + req.params.mail + "';";
+    var query = `SELECT mail, password FROM [Table_users] WHERE mail = '${req.params.mail}';`;
     executeQuery(res, query);
 });
 
@@ -167,7 +163,7 @@ passport.use(new LocalStrategy(
         var dbConn = new sql.Connection(dbConfig);
         dbConn.connect().then(function () {
             var request = new sql.Request(dbConn);
-            request.query("SELECT mail FROM [Table_users] WHERE mail = '" + mail + "' AND password = '" + password + "';").then(function (recordSet) {
+            request.query(`SELECT mail FROM [Table_users] WHERE mail = '${mail}' AND password = '${password}';`).then(function (recordSet) {
                 if (recordSet.length > 0) {
                     user.mail = recordSet[0].mail;
                 }
