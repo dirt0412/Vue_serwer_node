@@ -97,7 +97,10 @@ app.post("/api/product", function (req, res) {
         try {
             let pool = await sql.connect(dbConfig)
             let result = await pool.request()
-                .query(`INSERT INTO [Table_products] (name, description, price) VALUES ( '${req.body.product.name}','${req.body.product.description}',${req.body.product.price});`)
+                .input('name', sql.NVarChar, req.body.product.name)
+                .input('description', sql.NVarChar, req.body.product.description)
+                .query(`INSERT INTO [Table_products] (name, description, price) VALUES ( @name, @description, ${req.body.product.price});`)
+            //.query(`INSERT INTO [Table_products] (name, description, price) VALUES ( '${req.body.product.name}','${req.body.product.description}',${req.body.product.price});`)
 
             res.send(result);
 
@@ -125,7 +128,10 @@ app.put("/api/product/:id", function (req, res) {
         try {
             let pool = await sql.connect(dbConfig)
             let result = await pool.request()
-                .query(`UPDATE [Table_products] SET name='${req.body.product.name}' , description='${req.body.product.description}' , price=${req.body.product.price}  WHERE id=${req.params.id};`)
+                .input('name', sql.NVarChar, req.body.product.name)
+                .input('description', sql.NVarChar, req.body.product.description)
+                .query(`UPDATE [Table_products] SET name=@name , description=@description , price=${req.body.product.price}  WHERE id= ${req.params.id};`)
+            //.query(`UPDATE [Table_products] SET name='${req.body.product.name}' , description='${req.body.product.description}' , price=${req.body.product.price}  WHERE id=${req.params.id};`)
 
             res.send(result);
         } catch (err) {
